@@ -1,0 +1,32 @@
+name: Product delivery item
+description: Record a story, enabler or time-boxed technical spike
+title: "[Delivery] "
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Work type
+      options:
+        - User story
+        - Enabler
+        - Technical spike
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: User, business decision and desired outcome
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Verifiable acceptance criteria
+    validations:
+      required: true
+  - type: textarea
+    id: ownership
+    attributes:
+      label: Owner, priority, dependencies and release risk
+    validations:
+      required: true

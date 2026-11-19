@@ -1,0 +1,5 @@
+-r requirements.txt
+httpx2==2.16.2
+pytest==9.2.0
+playwright==1.62.0
+sqlglot==30.33.0

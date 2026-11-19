@@ -1,0 +1,16 @@
+services:
+  portal:
+    build: .
+    init: true
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - portal-data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://127.0.0.1:8000/health',timeout=2).close()"]
+      timeout: 3s
+      interval: 5s
+      retries: 8
+
+volumes:
+  portal-data:

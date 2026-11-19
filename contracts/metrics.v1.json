@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "scenario_as_of": "2026-10-02T12:00:00Z",
+  "grain": ["month", "site_id"],
+  "shared_dimensions": ["calendar_month", "service_region"],
+  "sites": [
+    {"id":"harbor","name":"Harbor Coast"},
+    {"id":"metro","name":"Metro Belt"},
+    {"id":"highland","name":"Highland"}
+  ],
+  "domains": [
+    {"id":"finance","name":"Finance","product":"Financial performance","owner":"FP&A Lead","consumer":"Finance and executive leadership","purpose":"Track recognised service revenue and profitability against the monthly performance threshold.","table":"mart_finance","source":"Synthetic finance close","freshness_hours":36,"checks":["gross_profit_cents <= revenue_cents"],"min_cohort":null,
+      "metrics":[
+        {"id":"revenue","name":"Recognised revenue","unit":"EUR","numerator":"revenue_cents","denominator":null,"scale":0.01,"goal":460000,"goal_basis":"monthly_global","direction":"up","definition":"Revenue recognised when a service obligation is fulfilled, excluding VAT and net of credits.","formula":"Σ recognised service revenue","exclusions":"Open bookings and VAT."},
+        {"id":"margin","name":"Gross margin","unit":"%","numerator":"gross_profit_cents","denominator":"revenue_cents","scale":100,"goal":35,"goal_basis":"period","direction":"up","definition":"Recognised revenue remaining after direct delivery costs, as a percentage of recognised revenue.","formula":"Σ gross profit ÷ Σ recognised revenue × 100","exclusions":"Corporate overhead and months without a revenue denominator."}
+      ]},
+    {"id":"commercial","name":"Commercial","product":"Sales performance","owner":"Sales Operations Lead","consumer":"Sales and regional managers","purpose":"Understand booked work and how often closed opportunities turn into wins.","table":"mart_commercial","source":"Synthetic sales register","freshness_hours":24,"checks":["won <= closed"],"min_cohort":null,
+      "metrics":[
+        {"id":"bookings","name":"Net bookings","unit":"EUR","numerator":"bookings_cents","denominator":null,"scale":0.01,"goal":520000,"goal_basis":"monthly_global","direction":"up","definition":"Signed service order value net of cancellations in the month, independent of revenue recognition.","formula":"Σ signed order value net of cancellations","exclusions":"Pipeline value and unsigned orders."},
+        {"id":"win-rate","name":"Win rate","unit":"%","numerator":"won","denominator":"closed","scale":100,"goal":52,"goal_basis":"period","direction":"up","definition":"Share of closed sales opportunities classified as won in the close month.","formula":"Σ won opportunities ÷ Σ closed opportunities × 100","exclusions":"Open, duplicate and withdrawn opportunities."}
+      ]},
+    {"id":"operations","name":"Operations","product":"Service delivery","owner":"Service Delivery Lead","consumer":"Dispatch and regional operations","purpose":"Compare reliable service delivery across the regional network.","table":"mart_operations","source":"Synthetic dispatch ledger","freshness_hours":12,"checks":["on_time <= completed"],"min_cohort":null,
+      "metrics":[
+        {"id":"on-time","name":"On-time delivery","unit":"%","numerator":"on_time","denominator":"completed","scale":100,"goal":92,"goal_basis":"period","direction":"up","definition":"Share of completed visits that met the original committed completion time.","formula":"Σ on-time completions ÷ Σ completed visits × 100","exclusions":"Open and cancelled visits. A reschedule does not reset the original deadline."},
+        {"id":"visits","name":"Completed visits","unit":"count","numerator":"completed","denominator":null,"scale":1,"goal":440,"goal_basis":"monthly_global","direction":"up","definition":"Completed service visits counted once during their completion month.","formula":"Σ distinct completed visits at source","exclusions":"Cancelled visits and open work orders."}
+      ]},
+    {"id":"people","name":"People Analytics","product":"Workforce readiness","owner":"People Analytics Lead","consumer":"People leadership and regional operations","purpose":"Monitor training coverage and absence pressure using regional cohort aggregates.","table":"mart_people","source":"Synthetic workforce cohort export","freshness_hours":72,"checks":["trained <= eligible","absence_days <= scheduled_days"],"min_cohort":{"column":"eligible","minimum":20},
+      "metrics":[
+        {"id":"training","name":"Training compliance","unit":"%","numerator":"trained","denominator":"eligible","scale":100,"goal":94,"goal_basis":"period","direction":"up","definition":"Share of eligible employee-month observations with all mandatory training current at month end.","formula":"Σ compliant employee-months ÷ Σ eligible employee-months × 100","exclusions":"Workers outside the training policy. The ratio across months weights eligible employee-months."},
+        {"id":"absence","name":"Absence rate","unit":"%","numerator":"absence_days","denominator":"scheduled_days","scale":100,"goal":4,"goal_basis":"period","direction":"down","definition":"Share of scheduled workdays lost to unplanned absence in the selected period.","formula":"Σ unplanned absence days ÷ Σ scheduled workdays × 100","exclusions":"Planned holiday and approved training time."}
+      ]}
+  ]
+}
